@@ -933,9 +933,9 @@ void ApplePS2SynapticsTouchPad::packetReady()
             // we don't advance tail as the ring buffer is reset when the device is initialised
             IOLog("VoodooPS2SynapticsTouchPad - spurious reset - disable device\n");
             this->setDevicePowerState(kPS2C_DisableDevice);
-            IOLog("kubatek94 VoodooPS2SynapticsTouchPad - spurious reset - enable device\n");
+            IOLog("VoodooPS2SynapticsTouchPad - spurious reset - enable device\n");
             this->setDevicePowerState(kPS2C_EnableDevice);
-            IOLog("kubatek94 VoodooPS2SynapticsTouchPad - spurious reset - device enabled\n");
+            IOLog("VoodooPS2SynapticsTouchPad - spurious reset - device enabled\n");
         }
         else
         {

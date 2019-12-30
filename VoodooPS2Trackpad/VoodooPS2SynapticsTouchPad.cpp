@@ -926,17 +926,26 @@ void ApplePS2SynapticsTouchPad::packetReady()
     while (_ringBuffer.count() >= kPacketLength)
     {
         UInt8* packet = _ringBuffer.tail();
-        if (0x00 != packet[0])
+        
+        if (0x00 == packet[0] && kSC_Reset == packet[1])
         {
-            // normal packet
-            dispatchEventsWithPacket(_ringBuffer.tail(), kPacketLength);
+            // a reset packet was buffered... so disable the device to get to a known state, then fully initialise it
+            // we don't advance tail as the ring buffer is reset when the device is initialised
+            IOLog("VoodooPS2SynapticsTouchPad - spurious reset - disable device\n");
+            this->setDevicePowerState(kPS2C_DisableDevice);
+            IOLog("kubatek94 VoodooPS2SynapticsTouchPad - spurious reset - enable device\n");
+            this->setDevicePowerState(kPS2C_EnableDevice);
+            IOLog("kubatek94 VoodooPS2SynapticsTouchPad - spurious reset - device enabled\n");
         }
         else
         {
-            // a reset packet was buffered... schedule a complete reset
-            ////initTouchPad();
+            if (0x00 != packet[0])
+            {
+                // normal packet
+                dispatchEventsWithPacket(packet, kPacketLength);
+            }
+            _ringBuffer.advanceTail(kPacketLength);
         }
-        _ringBuffer.advanceTail(kPacketLength);
     }
 }
 

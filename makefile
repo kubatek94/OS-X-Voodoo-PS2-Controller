@@ -17,10 +17,20 @@ ifeq ($(findstring 64,$(BITS)),64)
 OPTIONS:=$(OPTIONS) -arch x86_64
 endif
 
+TARGETS:=-target VoodooPS2Trackpad -target VoodooPS2Mouse -target VoodooPS2Keyboard -target VoodooPS2Controller
+
+.PHONY: build_debug
+build_debug:
+	xcodebuild -configuration Debug $(OPTIONS) $(TARGETS)
+
+.PHONY: build_release
+build_release:
+	xcodebuild -configuration Release $(OPTIONS) $(TARGETS)
+
 .PHONY: all
 all:
-	xcodebuild build $(OPTIONS) -scheme All -configuration Debug
-	xcodebuild build $(OPTIONS) -scheme All -configuration Release
+	xcodebuild $(TARGETS) $(OPTIONS) -configuration Debug
+	xcodebuild $(TARGETS) $(OPTIONS) -configuration Release
 
 .PHONY: clean
 clean:
